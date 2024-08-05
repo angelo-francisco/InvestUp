@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "investup"
+version = "0.1.0"
+description = ""
+authors = ["angelo-francisco <ics20080729@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+django = "^5.0.7"
+pillow = "^10.4.0"
+taskipy = "^1.13.0"
+
+[tool.taskipy.tasks]
+run = 'python manage.py runserver'
+mkmg = 'python manage.py makemigrations'
+mg = 'python manage.py migrate'
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
