@@ -3,18 +3,18 @@ from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-config = AutoConfig(BASE_DIR.joinpath('secrets/.env'))
+config = AutoConfig(BASE_DIR.joinpath("secrets/.env"))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
+SECRET_KEY = config("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -29,7 +29,8 @@ DJANGO_APPS = [
 ]
 
 PROJECT_APPS = [
-
+    "users",
+    "companies",
 ]
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS
@@ -49,7 +50,7 @@ ROOT_URLCONF = "core.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR.joinpath('templates')],
+        "DIRS": [BASE_DIR.joinpath("templates")],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -110,17 +111,21 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 
 STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR.joinpath('staticfiles')]
-STATIC_ROOT = BASE_DIR.joinpath('static')
+STATICFILES_DIRS = [BASE_DIR.joinpath("staticfiles")]
+STATIC_ROOT = BASE_DIR.joinpath("static")
 
 
 # Media Files
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR.joinpath('media')
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR.joinpath("media")
 
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Login
+LOGIN_URL = "/auth/login/"

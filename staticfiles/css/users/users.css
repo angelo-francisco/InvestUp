@@ -1,0 +1,47 @@
+body {
+    background-image: url('/static/imgs/bg.png');
+    height: 100vh;
+    background-size: cover;
+}
+
+
+.text-logo{
+    color: rgb(161, 161, 161);
+    font-weight: 100;
+}
+
+.input-pers{
+    margin-top: 5px;
+    background-color: transparent !important;
+    font-size: 18px;
+    color: white !important;
+}
+
+.btn-indigo{
+    background-color: var(--contrast-color);
+    color: white;
+    width: 100%;
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+.btn-indigo-normal{
+
+    background-color: var(--contrast-color);
+    color: white;
+
+}
+
+.btn-indigo:hover{
+    background-color: #332cb6;
+}
+
+.centralizar{
+    text-align: left;
+    text-decoration: underline;
+}
+
+.texto{
+    color: white;
+    text-decoration: none;
+}
