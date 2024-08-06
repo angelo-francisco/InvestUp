@@ -8,21 +8,22 @@
 {% block head %}
 
     <link rel="stylesheet" href="{% static 'css/users/users.css' %}">
-
+    <style>
+        body {
+            overflow-y: hidden;
+        }
+    </style>
 {% endblock %}
 
 
 {% block content %}
-
+    {% include "partials/nav.html" %}
     <div class="container">
-        <br>
-        <br>
-        <!-- TODO: Forms Errors Messages -->
-        <div class="row">
+        <div class="row" style="scale: 0.9;">
             <div class="col-md">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-
+                        
                     <label>{{ form.name.label }}</label>
                     {{ form.name }}
                     <br>
@@ -43,31 +44,38 @@
                     <br>
                     <label>{{ form.percentual_equity.label }}</label>
                     {{ form.percentual_equity }}
-                    <input type="submit" class="btn btn-lg btn-indigo" value="Sign">
-
-                </div>
+                    <input type="submit" class="btn btn-lg btn-indigo" value="Add">
+            </div>
                 <br>
-                <div class="col-md">
-                    <br>
-                    <label style="margin-bottom: 13px;">{{ form.internship.label }}</label>
-                    {{ form.internship }}
-                    <br>
-                    <label>{{ form.area.label }}</label>    
-                    {{ form.area }}
-                    <br>
-                    <label>{{ form.target_audience.label }}</label>
-                    {{ form.target_audience }}
-                    <br>
-                    <label>{{ form.value.label }}</label>
-                    {{ form.value }}
-                    <br>
-                    <label>{{ form.pitch.label }}</label>
-                    {{ form.pitch }}
-                    <br>
-                    <label>{{ form.logo.label }}</label>
-                    {{ form.logo }}
-                    <br>
-                        
+            <div class="col-md">
+                <label style="margin-bottom: 5px;">{{ form.internship.label }}</label>
+                {{ form.internship }}
+                <label style="margin-top: 5px;">{{ form.area.label }}</label>    
+                {{ form.area }}
+                <br>
+                <label>{{ form.target_audience.label }}</label>
+                {{ form.target_audience }}
+                <br>
+                <label>{{ form.value.label }}</label>
+                {{ form.value }}
+                <br>
+                <label>{{ form.pitch.label }}</label>
+                {{ form.pitch }}
+                <br>
+                <label>{{ form.logo.label }}</label>
+                {{ form.logo }}
+                <br>
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        {% for field, errors in form.errors.items %}
+                        <strong>{{ field }}: </strong>
+                            {% for error in errors %}
+                                {{ error }}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>    
+                {% endif %}
                 </form>
             </div>
         </div>

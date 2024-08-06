@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 
 
 alternativesURLS = [
-    path("", RedirectView.as_view(url=reverse_lazy("addCompany"))),
+    path("", RedirectView.as_view(url=reverse_lazy("showCompany"))),
 ]
 
 urlpatterns = [
