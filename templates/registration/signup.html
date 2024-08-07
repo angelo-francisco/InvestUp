@@ -1,0 +1,45 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Signup Form
+{% endblock %}
+    
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/users/users.css' %}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="height: 100vh;display: flex;justify-content: center;align-items: center;">
+    <div class="col-md-10 d-flex justify-content-center bg-color-dark" style="background-color: transparent !important;flex-direction: column;width: 25em;">
+        <h1 class="text-logo">InvestUp</h1>
+        <h1>SignUp</h1>
+        {% include "partials/messages.html" %}
+        <br>
+        <form method="POST" style="display: flex;flex-direction: column;gap: 15px;">
+            {% csrf_token %}
+
+            {% include "partials/form_error.html" %}
+                
+            {% for field in form %}
+                <div>
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                </div>
+            {% endfor %}
+                
+            <div class="centralizar">
+                <a href="{% url 'login' %}" class="texto">Do you have an account?</a>
+                <input type="submit" class="btn btn-indigo" value="Cadastrar">
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
