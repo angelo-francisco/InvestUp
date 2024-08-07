@@ -1,5 +1,5 @@
 {% for message in messages %}
-    <div class="alert alert-{{ message.tags }}">
+    <div class="alert alert-{{ message.tags }}" style="transition: opacity 0.3s ease-in-out;">
         {% if message.tags == 'info' %}
             <i class="bi bi-info-circle-fill"></i>
         {% elif message.tags == 'success' %}
@@ -11,3 +11,27 @@
         {{ message }}
     </div>
 {% endfor %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seleciona todas as mensagens com a classe 'alert'
+        var alerts = document.querySelectorAll('.alert');
+        
+        alerts.forEach(function(alert) {
+            alert.addEventListener('click', function() {
+                fadeOut(alert);
+            });
+
+            function fadeOut(element) {
+                element.style.opacity = 0;
+                setTimeout(function() {
+                    element.style.display = 'none';
+                }, 300); 
+            }
+
+            setTimeout(function() {
+                fadeOut(alert);
+            }, 3000); 
+        });
+    });
+</script>

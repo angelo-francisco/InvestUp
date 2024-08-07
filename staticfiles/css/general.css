@@ -51,3 +51,7 @@ body{
 :-ms-input-placeholder {  
     color: rgb(196, 196, 196) !important;  
 }
+
+.navbar-nav li a:hover {
+    color: rgb(185, 185, 185);
+}

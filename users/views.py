@@ -4,11 +4,12 @@ from django.urls import reverse
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout
+from django.contrib import messages
 
 
 def _signup(request):
     if request.user.is_authenticated:
-        return redirect(reverse("addCompany"))
+        return redirect(reverse("showCompany"))
 
     form = forms.SignupForm()
 
@@ -17,6 +18,8 @@ def _signup(request):
 
         if form.is_valid():
             form.save()
+
+            messages.success(request, "Signup done successfully")
             return redirect(reverse("login"))
 
     context = {"form": form}
@@ -25,7 +28,7 @@ def _signup(request):
 
 def _login(request):
     if request.user.is_authenticated:
-        return redirect(reverse("addCompany"))
+        return redirect(reverse("showCompany"))
 
     form = forms.LoginForm()
 
@@ -36,7 +39,8 @@ def _login(request):
             user = form.get_user()
             login(request, user)
 
-            return redirect(reverse("addCompany"))
+            messages.success(request, "Login done successfully")
+            return redirect(reverse("showCompany"))
 
     context = {"form": form}
     return render(request, "registration/login.html", context=context)

@@ -1,6 +1,10 @@
 {% extends "bases/base.html" %}
 {% load static %}
 
+{% block title %}
+{{ company.name }}
+{% endblock %}
+
 {% block head %}
 
 <link rel="stylesheet" href="{% static 'css/company/show.css' %}">
@@ -19,11 +23,11 @@
         <div class="col-md-7">
             <div class="row">
                 <div class="col-md-3">
-                    <img src="#" class="foto-empresa" alt="">
+                    <img src="{{ company.logo.url }}" class="foto-empresa" alt="{{company.name}}-logo">
                 </div>
                 <div class="col-md">
-                    <h3>Percentual captado</h3>
-                    <h2>Pythonando</h2>
+                    <h3>Percentage captured</h3>
+                    <h2>{{ company.name }}</h2>
 
                 </div>
 
@@ -32,7 +36,7 @@
             <div class="row">
                 <div class="col-md">
                     <h2 class="titulo2">XYZ Investidores</h2>
-                    <a href="#" class="sub-fonte">Ver investidores</a>
+                    <a href="#" class="sub-fonte">See investors</a>
                 </div>
                 <div class="col-md">
                     <h2 class="titulo2">0 Captados</h2>
@@ -41,44 +45,52 @@
             <hr>
             <div class="row">
                 <div class="col-md">
-                    <h5>Percentual de equity vendido</h5>
+                    <h5>Percentage of equity sold</h5>
                     <div class="progress">
+                        <!-- por resolver -->
                         <div class="progress-bar bg-primary" style="width: {{ company.percentual_equity }}%;"></div>
-                        <div class="progress-bar bg-success" style="width: calc(100% - {{ company.percentual_equity }}%);"></div>
+                        <div class="progress-bar bg-success"
+                            style="width: calc(100% - {{ company.percentual_equity }}%);"></div>
                     </div>
                     <br>
-                    <label class="point-white"></label><span>&nbsp&nbsp Percentual total da empresa</span>
+                    <label class="point-white"></label><span>&nbsp&nbsp Total</span>
                     <br>
-                    <label class="point-green"></label><span>&nbsp&nbsp Percentual a ser vendido</span>
+                    <label class="point-green"></label><span>&nbsp&nbsp For sell</span>
                     <br>
-                    <label class="point-blue"></label><span>&nbsp&nbsp Percentual vendido</span>
+                    <label class="point-blue"></label><span>&nbsp&nbsp Sold</span>
                 </div>
                 <div class="col-md">
                     <h5>Valuation</h5>
-                    <span class="sub-fonte">Atual: 000</span>
+                    <span class="sub-fonte">Current: 000</span>
                     <br>
-                    <span class="sub-fonte">Esperado: 000</span>
+                    <span class="sub-fonte">Expected: {{ company.get_valuation }}</span>
                 </div>
 
 
                 <div class="documentos">
-                    <h3>Anexar documentos</h3>
-                    <form action="#" method="POST" enctype='multipart/form-data'>{% csrf_token %}
-                        <label>Titulo</label>
-                        <input type="text" name="titulo" class="form-control" placeholder="Titulo do documento">
+                    <h3>Attach document</h3>
+                    {% include "partials/form_error.html" %}
+                    <form method="POST" enctype='multipart/form-data'>
+                        {% csrf_token %}
+
+                        {% for field in form %}
+                        {{ field.label }}
+                        {{ field }}
                         <br>
-                        <label>Arquivo</label>
-                        <input type="file" name="arquivo" class="form-control">
-                        <br>
-                        <input type="submit" class="btn btn-success" value="Cadastrar">
+                        {% endfor %}
+
+                        <input type="submit" class="btn btn-success" value="Attach">
                     </form>
                     <br><br>
 
 
+
+
+                    {% for document in documents %}
                     <div class="list_documentos">
                         <div class="row">
                             <div class="col-md-2" style="text-align: center">
-                                <a href="#">
+                                <a href="{{ document.document.url }}" download>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="color: white;"
                                         fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                         <path
@@ -89,18 +101,23 @@
                                 </a>
 
                             </div>
-                            <div class="col-md-6">Titulo aqui</div>
+                            <div class="col-md-6">{{ document.title }}</div>
                             <div class="col-md-4" style="text-align: right;">
-                                <a href="#">
+                                {% if document.company.user == request.user %}
+                                <a href="{% url 'removeDocument' slug=document.slug %}">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="color: white;"
                                         fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
                                         <path
                                             d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8z" />
                                     </svg>
                                 </a>
+                                {% endif %}
+
                             </div>
                         </div>
                     </div>
+                    <p></p>
+                    {% endfor %}
 
                     <br>
                     <hr>

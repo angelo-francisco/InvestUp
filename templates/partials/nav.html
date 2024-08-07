@@ -1,14 +1,39 @@
-<nav class="navbar navbar-expand-lg navbar-dark dark-color">
-    <div class="container-fluid">
-        <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-        <ul class="navbar-nav">
+<nav class="navbar navbar-expand-lg navbar-dark dark-color justify-content-between" style="padding: 10px;">
+    <a class="navbar-brand" style="font-weight: 700; font-size: 25px;">Invest<span style="color: blueviolet;">Up</span></a>
+    <div>
+        <ul class="navbar-nav" style="font-weight: 600;">
             <li class="nav-item">
-	            <a class="nav-link active" aria-current="page" href="/">Marketplace</a>
+                <a class="nav-link active" aria-current="page" href="/">Marketplace</a>
             </li>
             <li class="nav-item">
-	            <a class="nav-link active" href="#">Want to capt?</a>
+                <a class="nav-link active" href="#">Want to capt?</a>
             </li>
         </ul>
-        </div>
+    </div>
+    <div>
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link active" href="/auth/logout/"><i class="bi bi-box-arrow-right" style="color: red;"></i></a>
+            </li>
+        </ul>
     </div>
 </nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Seleciona todos os links dentro dos itens de navegação
+        var navLinks = document.querySelectorAll('.navbar-nav .nav-link');
+
+        // Adiciona o efeito de hover para cada link
+        navLinks.forEach(function(link) {
+            link.addEventListener('mouseover', function() {
+                link.style.color = '#b8b4b4'; // Altera a cor do texto ao passar o mouse
+                link.style.cursor = 'pointer'; // Muda o cursor para uma mãozinha ao passar o mouse
+            });
+            link.addEventListener('mouseout', function() {
+                link.style.color = ''; // Remove a cor do texto quando o mouse sai
+                link.style.cursor = ''; // Remove o cursor personalizado quando o mouse sai
+            });
+        });
+    });
+</script>

@@ -30,7 +30,7 @@ class Company(models.Model):
     )
     value = models.DecimalField(max_digits=9, decimal_places=2)
     pitch = models.FileField(upload_to="pitches")
-    logo = models.FileField(upload_to="videos")
+    logo = models.FileField(upload_to="logos")
     slug = models.SlugField(max_length=100, unique=True, blank=True)
 
     def save(self, *args, **kwargs):
@@ -41,6 +41,7 @@ class Company(models.Model):
     def __str__(self):
         return f"{self.user.username} | {self.name}"
 
+    @property
     def get_status(self):
         status = mark_safe('<span class="badge bg-success">Capting</span>')
         actual_date = timezone.now().date()
@@ -49,3 +50,27 @@ class Company(models.Model):
             status = mark_safe('<span class="badge bg-primary">Closed Capture</span>')
 
         return status
+
+    @property
+    def get_valuation(self):
+        valuation = (self.value * 100) / self.percentual_equity
+        return round(valuation, 2)
+
+
+class AttachDocument(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+    title = models.CharField(max_length=50)
+    document = models.FileField(upload_to="documents")
+    slug = models.SlugField(max_length=100, unique=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.title)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return f"{self.title} | {self.company}"
+
+
+
+class Metrics(models.Model): ...

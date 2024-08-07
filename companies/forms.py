@@ -1,5 +1,5 @@
 from django import forms
-from .models import Company
+from .models import Company, AttachDocument
 from users.forms import StyleForm
 from django.utils import timezone
 
@@ -114,3 +114,37 @@ class CompanyForm(StyleForm):
             raise forms.ValidationError("Supported types is only: JPEG and PNG")
 
         return logo
+
+
+class AttachDocumentForm(StyleForm):
+    class Meta:
+        model = AttachDocument
+        fields = ("title", "document")
+        widgets = {
+            "title": forms.TextInput(attrs={"placeholder": "Write the document name"})
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        self.company = kwargs.pop("company", None)
+
+        super().__init__(*args, **kwargs)
+
+    def clean_document(self):
+        document = self.cleaned_data.get("document", None)
+        max_size = 100 * pow(1024, 2)
+        allowed_types = ["application/pdf"]
+
+        if self.company.user != self.user:
+            raise forms.ValidationError("Your not the company's owner")
+
+        if not document:
+            raise forms.ValidationError("Please, enter the document!")
+
+        if document.size > max_size:
+            raise forms.ValidationError("File size must be under 100MB")
+
+        if document.content_type not in allowed_types:
+            raise forms.ValidationError("Only PDF file is allow")
+
+        return document

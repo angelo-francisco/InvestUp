@@ -65,17 +65,7 @@
                 <label>{{ form.logo.label }}</label>
                 {{ form.logo }}
                 <br>
-                {% if form.errors %}
-                    <div class="alert alert-danger">
-                        <i class="bi bi-exclamation-triangle"></i>
-                        {% for field, errors in form.errors.items %}
-                        <strong>{{ field }}: </strong>
-                            {% for error in errors %}
-                                {{ error }}
-                            {% endfor %}
-                        {% endfor %}
-                    </div>    
-                {% endif %}
+                {% include "partials/form_error.html" %}
                 </form>
             </div>
         </div>

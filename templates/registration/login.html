@@ -19,20 +19,12 @@
     <div class="col-md-10 d-flex justify-content-center bg-color-dark" style="background-color: transparent !important;flex-direction: column;width: 25em;">
         <h1 class="text-logo">InvestUp</h1>
         <h1>LogIn</h1>
+        {% include "partials/messages.html" %}
         <br>
         <form method="POST" style="display: flex;flex-direction: column;gap: 15px;">
             {% csrf_token %}
 
-            {% if form.errors %}
-                <div class="alert alert-danger">
-                <i class="bi bi-exclamation-triangle"></i>
-                    {% for _, errors in form.errors.items %}
-                        {% for error in errors %}
-                            {{ error }}
-                        {% endfor %}
-                    {% endfor %}
-                </div>    
-            {% endif %}
+            {% include "partials/form_error.html" %}
                 
             {% for field in form %}
                 <div>

@@ -1,5 +1,6 @@
-from .forms import CompanyForm
+from .forms import CompanyForm, AttachDocumentForm
 from .models import Company as CompanyModel
+from .models import AttachDocument
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -8,18 +9,48 @@ from django.urls import reverse
 from django.http import Http404
 
 
+def removeDocument(request, slug):
+    try:
+        document = get_object_or_404(AttachDocument, slug=slug)
+    except Http404:
+        messages.info(request, "Documents can't be found")
+        return redirect(reverse("seeCompany", kwargs={"slug": document.company.slug}))
+
+    if document.company.user != request.user:
+        messages.warning(request, "You can't delete this document")
+        return redirect(reverse("seeCompany", kwargs={"slug": document.company.slug}))
+
+    document.delete()
+    messages.success(request, "Document deleted sucessfully")
+
+    return redirect(reverse("seeCompany", kwargs={"slug": document.company.slug}))
+
+
 def seeCompany(request, slug):
     try:
-        company = get_object_or_404(CompanyModel, slug=slug)
-
+        _company = get_object_or_404(CompanyModel, slug=slug)
     except Http404:
         messages.info(request, "Company can't be found")
         return redirect(reverse("showCompany"))
 
-    if request.method == "POST":
-        ...
+    documents = AttachDocument.objects.all()
+    form = AttachDocumentForm()
+    context = {"company": _company, "form": form, "documents": documents}
 
-    context = {"company": company}
+    if request.method == "POST":
+        formPOST = AttachDocumentForm(
+            request.POST, request.FILES, user=request.user, company=_company
+        )
+
+        if formPOST.is_valid() and formPOST.is_multipart():
+            instance = formPOST.save(commit=False)
+            instance.company = _company
+            instance.save()
+
+            messages.success(request, "Document attached successfully")
+        else:
+            context["form"] = formPOST
+
     return render(request, "companies/see.html", context=context)
 
 
