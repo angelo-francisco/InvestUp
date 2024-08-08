@@ -15,6 +15,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("auth/", include("users.urls")),
     path("company/", include("companies.urls")),
+    path("investors/", include("investors.urls")),
 ] + alternativesURLS
 
 # FOR MEDIA FILES

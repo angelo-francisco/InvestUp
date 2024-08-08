@@ -1,0 +1,85 @@
+{% extends "bases/base.html" %}
+{% load static %}
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/company/show.css' %}">
+<link rel="stylesheet" href="{% static 'css/users/users.css' %}">
+<link rel="stylesheet" href="{% static 'css/company/see.css' %}">
+<link rel="stylesheet" href="{% static 'css/investors/sugest.css' %}">
+
+{% endblock %}
+
+
+{% block title %}
+    Sugest
+{% endblock %}
+
+{% block content %}
+    {% include "partials/nav.html" %}
+    <br><br>
+    <div class="container">
+        <div class="centralizar">
+            <h2>Receive company suggestions</h2>
+            <p>We will analyze your profile and recommend the best investment options</p>
+        </div>
+        <br>
+        <div class="dark-color cont-sugestao">
+            <h3>Types of investors</h3>
+            <div style="width: 60%">
+                <form action="{% url 'sugest' %}" method="POST">{% csrf_token %}
+                    <p>Select conservative if you are looking for less risky investments
+                        and with lower returns, select stripped if you prefer to take more risks
+                        and have greater possibilities of return.</p>
+                    <select name="type" id="" class="form-select">
+                        <option value="C">Conservative</option>
+                        <option value="S">Stripped</option>
+                    </select>
+                    <br>
+                    <h3>Areas of interests</h3>
+                    <p>Select the market areas you are interested in investing in</p>
+                    <select name="area" id="" class="form-select" multiple>
+                        {% for area in areas %}
+                            <option value="{{area.0}}">{{area.1}}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    <h3>Amount you want to invest</h3>
+                    <p>Enter the maximum amount you want to invest</p>
+                    <input type="number" name="value" class="form-control" placeholder="00,00">
+                    <br>
+                    <input type="submit" class="btn btn-indigo" value="Enter">
+                </form>
+            </div>
+            
+        </div>
+
+        <br>
+        <br>
+
+        <div class="row">
+            {% if companies %}
+            {% for company in companies %}
+                <div class="col-md">
+                    <div class="card dark-color" style="width: 18rem; border: none;" >
+                        <img class="card-img-top dark-color" src="{{company.logo.url}}" alt="Card image cap">
+                        <div class="card-body dark-color">
+                        <h5 class="card-title">{{company.name}}</h5>
+                        <p class="card-text">{{company.description}}</p>
+                        <a href="#" class="btn btn-indigo">See</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-md">
+                    {% if companies == None %}
+                    <h1>Company can't be found</h1>
+                    {% else %}
+                    <h1>Get up the entries to start!</h1>
+                    {% endif %}
+                </div>
+            
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

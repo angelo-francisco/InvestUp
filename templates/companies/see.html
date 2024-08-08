@@ -124,15 +124,15 @@
 
                     <div class="row">
                         <div class="col-md">
-                            <form action="#" method="POST">{% csrf_token %}
-                                <label>Titulo</label>
-                                <input type="text" class="form-control" name="titulo"
-                                    placeholder="Adicione um texto ...">
+                            <form action="{% url 'addMetric' company.slug %}" method="POST">{% csrf_token %}
+                                <label>Title</label>
+                                <input type="text" class="form-control" name="title"
+                                    placeholder="Enter the metric title">
 
                         </div>
                         <div class="col-md">
-                            <label>Valor</label>
-                            <input type="text" class="form-control" name="valor" placeholder="Adicione um valor ...">
+                            <label>Value</label>
+                            <input type="number" class="form-control" name="value">
                         </div>
 
                     </div>

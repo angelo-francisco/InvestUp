@@ -1,12 +1,31 @@
 from .forms import CompanyForm, AttachDocumentForm
 from .models import Company as CompanyModel
-from .models import AttachDocument
+from .models import AttachDocument, Metrics
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
 from django.http import Http404
+
+
+def addMetric(request, slug):
+    try:
+        company = get_object_or_404(CompanyModel, slug=slug)
+    except Http404:
+        messages.info(request, "Company can't be found")
+        return redirect(reverse("seeCompany", kwargs={"slug": slug}))
+
+    metrics = Metrics.objects.create(
+        company=company,
+        title=request.POST.get("title"),
+        value=request.POST.get("value"),
+    )
+
+    metrics.save()
+    messages.success(request, "Metric added successfully")
+
+    return redirect(reverse("seeCompany", kwargs={"slug": slug}))
 
 
 def removeDocument(request, slug):

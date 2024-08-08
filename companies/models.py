@@ -72,5 +72,10 @@ class AttachDocument(models.Model):
         return f"{self.title} | {self.company}"
 
 
+class Metrics(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+    title = models.CharField(max_length=50)
+    value = models.FloatField()
 
-class Metrics(models.Model): ...
+    def __str__(self) -> str:
+        return self.title
