@@ -3,10 +3,13 @@
     <div>
         <ul class="navbar-nav" style="font-weight: 600;">
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/">Marketplace</a>
+                <a class="nav-link active" aria-current="page" href="{% url 'showCompany' %}">Marketplace</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link active" href="#">Want to capt?</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" href="{% url 'sugest' %}">Sugests</a>
             </li>
         </ul>
     </div>

@@ -1,0 +1,128 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/company/show.css' %}">
+<link rel="stylesheet" href="{% static 'css/users/users.css' %}">
+<link rel="stylesheet" href="{% static 'css/company/see.css' %}">
+	
+{% endblock %}
+
+{% block title %}
+    {{ company.name }}
+{% endblock %}
+    
+
+{% block content %}
+    {% include "partials/nav.html" %}
+    <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    {% include "partials/messages.html" %}
+                    <div class="col-md-3">
+                        <img src="{{company.logo.url}}" class="foto-empresa" alt="">
+                    </div>
+                    <div class="col-md">
+                        <h3>{{company.name}}</h3>
+                        <span class="badge bg-primary">{{company.get_area_display}}</span>
+                    </div>
+                    
+                </div>
+                <br><br>
+                <div class="progress" wtyle="80%">
+                    <div class="progress-bar bg-success"
+                         style="width:{{percentual}}%"></div>
+                </div>
+                <br>
+                    
+                    {% if u_80 %}
+                    <span class="ba ge bg-success">V</span><span>&nbsp &nbsp The company has already reached 80% of the percentage raised, so your investment will be realized.</span>
+                    {% else %}
+                     <span class="badge bg-warning">x</span><span>&nbsp &nbsp Your investment will be realized if the company achieves at least 80% of the expected value by the end date.</span>
+                    {% endif %}
+                        
+                
+                
+                <hr>
+                <p>{{empresa.descricao}}</p>
+                <div class="col-md">
+                    <h5>Expected Valuation</h5>
+                    <span class="sub-fonte">Expected: {{company.get_valuation}}</span>
+                    <br>
+                    <br>
+                    <h5>Percentual</h5>
+                    <span class="sub-fonte">Total: {{company.percentual_equity}}%</span>
+                    <br>
+                    <span class="sub-fonte">For sell: {{disp_percentual}}%</span>
+                </div>
+                <br>
+                <span class="badge bg-warning">{{company.target_audience}}</span>
+                <br><br>
+                <h4 style="color: #92D5EB">Indicators |</h4>
+                
+                <div class="row">
+                    
+                    {% for metric in metrics %}
+                        
+                    <div class="col-md-3" >
+                        <div class="dark-color" style="padding: 20px; text-align: center;">
+                            <h5>{{metric.title}}</h5>
+                            <h6>R$ {{metric.value}}</h6>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <hr>
+                <div class="row">
+                    <h4>Make your proposal</h4>
+                    <br><br>
+                    <div class="col-md">
+                        <form action="{% url 'proposalInvestors' slug=company.slug %}" method="POST"> 
+                            {% csrf_token %}
+                            <input type="number" name="value" class="form-control" placeholder="Enter the value">
+                            <br>
+                            <input type="submit" class="btn btn-indigo-normal" value="Salvar">
+                    </div>
+                    <div class="col-md">
+                            <input type="number" name="percentual" class="form-control" placeholder="Expected +ercentual">
+                        </form>
+                    </div>
+                    
+                </div>
+            </div>
+            <div class="col-md-5 intereses-investimentos">
+                <video name='demo' controls autoplay width='100%'>
+                    <source src="{{company.pitch.url}}" type="video/mp4"></source>
+                </video>
+
+                <hr>
+                
+                {% for doc in docs %}
+                    <div class="list_documentos">
+                        <div class="row">
+                            <div class="col-md-2" style="text-align: center">
+                                <a href="{{doc.document.url}}" download>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" style="color: white;" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
+                                        <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5"/>
+                                        <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708z"/>
+                                    </svg>
+                                </a>
+                                
+                            </div>
+                            <div class="col-md-6">{{doc.title}}</div>
+                            <div class="col-md-4" style="text-align: right;">
+                                
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                
+            </div>
+        </div>
+    </div>
+    <br><br>
+{% endblock %}

@@ -6,17 +6,33 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse
-from django.http import Http404
+from investors.models import InvestmentProposal
+
+
+@login_required
+def manage_proposal(request, id):
+    type = request.GET.get('acao')
+    ip = InvestmentProposal.objects.get(id=id)
+
+    if type == 'yes':
+        ip.status = 'PA'
+        messages.success(request, 'Proposal accepted')
+
+    elif type == 'no':
+        ip.status = 'PR'
+        messages.success(request, 'Proposal rejected')
+
+    ip.save()
+    return redirect(reverse('seeCompany', kwargs={'slug': ip.company.slug}))
 
 
 @login_required
 def addMetric(request, slug):
-    try:
-        company = get_object_or_404(CompanyModel, slug=slug)
-    except Http404:
-        messages.info(request, "Company can't be found")
-        return redirect(reverse("seeCompany", kwargs={"slug": slug}))
-
+    company = get_object_or_404(CompanyModel, slug=slug)
+    if company.user != request.user:
+        messages.info(request, 'This company is not your')
+        return redirect(reverse('showCompany'))
+    
     metrics = Metrics.objects.create(
         company=company,
         title=request.POST.get("title"),
@@ -31,11 +47,7 @@ def addMetric(request, slug):
 
 @login_required
 def removeDocument(request, slug):
-    try:
-        document = get_object_or_404(AttachDocument, slug=slug)
-    except Http404:
-        messages.info(request, "Documents can't be found")
-        return redirect(reverse("seeCompany", kwargs={"slug": document.company.slug}))
+    document = get_object_or_404(AttachDocument, slug=slug)
 
     if document.company.user != request.user:
         messages.warning(request, "You can't delete this document")
@@ -49,15 +61,32 @@ def removeDocument(request, slug):
 
 @login_required
 def seeCompany(request, slug):
-    try:
-        _company = get_object_or_404(CompanyModel, slug=slug)
-    except Http404:
-        messages.info(request, "Company can't be found")
-        return redirect(reverse("showCompany"))
+    _company = get_object_or_404(CompanyModel, slug=slug)
 
+    if _company.user != request.user:
+        messages.info(request, 'This company is not your')
+        return redirect(reverse('showCompany'))
+    
+    investment_proposal = InvestmentProposal.objects.filter(company=_company)
+    investment_proposal_sent = investment_proposal.filter(status='PE')
+    percentual = sum(investment_proposal.filter(status='PA').values_list('percentual', flat=True))
+    total_captado = sum(investment_proposal.filter(status='PA').values_list('value', flat=True))
+    total_investors = investment_proposal.filter(status='PA').count()
+    current_valuation = ( (float(total_captado) * 100) / float(percentual)) or 0
     documents = AttachDocument.objects.all()
     form = AttachDocumentForm()
-    context = {"company": _company, "form": form, "documents": documents}
+
+    context = {
+        "company": _company, 
+        "form": form, 
+        "documents": documents, 
+        'investment_proposal_sent': investment_proposal_sent,
+        'sold_percentual': int(percentual),
+        'total_captado': round(total_captado, 2),
+        'total_investors': total_investors,
+        'current_valuation': round(current_valuation, 2)
+
+    }
 
     if request.method == "POST":
         formPOST = AttachDocumentForm(

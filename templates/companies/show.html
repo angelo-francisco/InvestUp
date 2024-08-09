@@ -58,7 +58,7 @@ Companies
                     </div>
                 </td>
                 <td class="linha">{{ company.get_status }}</td>
-                <td class="linha"><a href="{% url 'seeCompany' company.slug %}" class="btn btn-indigo-normal">Abrir</a></td>
+                <td class="linha"><a href="{% if request.user != company.user %}{% url 'seeCompanyInvestors' company.slug %}{% else %}{% url 'seeCompany' company.slug %}{% endif %}" class="btn btn-indigo-normal">Abrir</a></td>
             </tr>
             {% endfor %}
         </tbody>

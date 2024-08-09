@@ -1,0 +1,55 @@
+{% extends "bases/base.html" %}
+{% load static %}
+
+
+{% block title %}
+    Sign Contract
+{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{% static 'css/company/show.css' %}">
+<link rel="stylesheet" href="{% static 'css/users/users.css' %}">
+<link rel="stylesheet" href="{% static 'css/company/see.css' %}">
+
+{% endblock %}
+
+
+{% block content %}
+    {% include "partials/nav.html" %}
+    <br><br>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-7">
+                <div class="row">
+                    {% include "partials/messages.html" %}
+                    <div class="col-md-3">
+                        <img src="{{investment_proposal.company.logo.url}}" class="foto-empresa" alt="">
+                    </div>
+                    <div class="col-md">
+                        <h3>Sign Contract</h3>
+                    </div>
+                    
+                </div>    
+        </div>
+        <div style="margin-top: 40px; padding: 20px" class="contrato dark-color">
+            <h3>Investment contract</h3>
+            <p>By signing this contract you agree to all the clauses below</p>  
+            
+            <ol>
+                <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</li>
+                <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</li>
+                <li>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy</li>
+            </ol>
+
+        </div>
+        <form action="{% url 'sign_contract' investment_proposal.id %}" enctype='multipart/form-data' method="POST" style="margin-top: 20px;"> {% csrf_token %}
+            <input type="file" name="selfie" class="form-control" style="width: 40%">
+            <br>
+            <input type="file" name="rg" class="form-control" style="width: 40%">
+            <br>
+            <input type="submit" class="btn btn-indigo-normal" value="Assinar contrato">
+        </form>
+    </div>
+    <br><br>
+{% endblock %}

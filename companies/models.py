@@ -13,7 +13,7 @@ from django.utils.text import slugify
 
 
 class Company(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING, related_name="company")
     name = models.CharField(max_length=50)
     cnpj = models.CharField(max_length=30)
     site = models.URLField()

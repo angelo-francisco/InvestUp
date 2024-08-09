@@ -84,7 +84,7 @@ class CompanyForm(StyleForm):
     def clean_pitch(self):
         pitch = self.cleaned_data.get("pitch", None)
         max_size = 100 * pow(1024, 2)
-        allowed_types = ["application/pdf"]
+        allowed_types = ["video/mp4"]
 
         if not pitch:
             raise forms.ValidationError("Please, enter your company's pitch")
@@ -93,7 +93,7 @@ class CompanyForm(StyleForm):
             raise forms.ValidationError("Pitch file size must be under 100MB")
 
         if pitch.content_type not in allowed_types:
-            raise forms.ValidationError("Only PDF files are allowed")
+            raise forms.ValidationError("Only mp4 files are allowed")
 
         return pitch
 
