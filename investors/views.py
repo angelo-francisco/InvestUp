@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from companies.modelChoices import area_choices
 from companies.models import Company
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def sugest(request):
     context = {"areas": area_choices}
 

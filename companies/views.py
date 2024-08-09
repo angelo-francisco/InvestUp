@@ -9,6 +9,7 @@ from django.urls import reverse
 from django.http import Http404
 
 
+@login_required
 def addMetric(request, slug):
     try:
         company = get_object_or_404(CompanyModel, slug=slug)
@@ -28,6 +29,7 @@ def addMetric(request, slug):
     return redirect(reverse("seeCompany", kwargs={"slug": slug}))
 
 
+@login_required
 def removeDocument(request, slug):
     try:
         document = get_object_or_404(AttachDocument, slug=slug)
@@ -45,6 +47,7 @@ def removeDocument(request, slug):
     return redirect(reverse("seeCompany", kwargs={"slug": document.company.slug}))
 
 
+@login_required
 def seeCompany(request, slug):
     try:
         _company = get_object_or_404(CompanyModel, slug=slug)
@@ -73,6 +76,7 @@ def seeCompany(request, slug):
     return render(request, "companies/see.html", context=context)
 
 
+@login_required
 def showCompany(request):
     companies = CompanyModel.objects.all()
 
