@@ -1,5 +1,10 @@
 {% extends "bases/base.html" %}
 {% load static %}
+
+{% block title %}
+    Sugest
+{% endblock %}
+
 {% block head %}
 
 <link rel="stylesheet" href="{% static 'css/company/show.css' %}">
@@ -7,11 +12,6 @@
 <link rel="stylesheet" href="{% static 'css/company/see.css' %}">
 <link rel="stylesheet" href="{% static 'css/investors/sugest.css' %}">
 
-{% endblock %}
-
-
-{% block title %}
-    Sugest
 {% endblock %}
 
 {% block content %}
@@ -23,10 +23,11 @@
             <p>We will analyze your profile and recommend the best investment options</p>
         </div>
         <br>
-        <div class="dark-color cont-sugestao">
-            <h3>Types of investors</h3>
-            <div style="width: 60%">
-                <form action="{% url 'sugest' %}" method="POST">{% csrf_token %}
+        <div class="dark-color cont-sugestao" style="display: flex;justify-content: center;">
+            <div style="width: 60%;">
+                <form action="{% url 'sugest' %}" method="POST">
+                    <h3>Types of investors</h3>
+                    {% csrf_token %}
                     <p>Select conservative if you are looking for less risky investments
                         and with lower returns, select stripped if you prefer to take more risks
                         and have greater possibilities of return.</p>
@@ -65,14 +66,14 @@
                         <div class="card-body dark-color">
                         <h5 class="card-title">{{company.name}}</h5>
                         <p class="card-text">{{company.description}}</p>
-                        <a href="#" class="btn btn-indigo">See</a>
+                        <a href="{% url 'seeCompanyInvestors' slug=company.slug %}" class="btn btn-indigo">See</a>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             {% else %}
                 <div class="col-md">
-                    {% if companies == None %}
+                    {% if search is False %}
                     <h1>Company can't be found</h1>
                     {% else %}
                     <h1>Get up the entries to start!</h1>

@@ -35,11 +35,11 @@
             <br><br>
             <div class="row">
                 <div class="col-md">
-                    <h2 class="titulo2">XYZ Investidores</h2>
+                    <h2 class="titulo2">{{total_investors}} Investors</h2>
                     <a href="#" class="sub-fonte">See investors</a>
                 </div>
                 <div class="col-md">
-                    <h2 class="titulo2">0 Captados</h2>
+                    <h2 class="titulo2">R$ {{total_captado}} Raised</h2>
                 </div>
             </div>
             <hr>
@@ -48,9 +48,9 @@
                     <h5>Percentage of equity sold</h5>
                     <div class="progress">
                         <!-- por resolver -->
-                        <div class="progress-bar bg-primary" style="width: {{ company.percentual_equity }}%;"></div>
+                        <div class="progress-bar bg-primary" style="width: {{ sold_percentual }}%;"></div>
                         <div class="progress-bar bg-success"
-                            style="width: calc(100% - {{ company.percentual_equity }}%);"></div>
+                            style="width:{{ company.percentual_equity }}%;"></div>
                     </div>
                     <br>
                     <label class="point-white"></label><span>&nbsp&nbsp Total</span>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="col-md">
                     <h5>Valuation</h5>
-                    <span class="sub-fonte">Current: 000</span>
+                    <span class="sub-fonte">Current: {{current_valuation}}</span>
                     <br>
                     <span class="sub-fonte">Expected: {{ company.get_valuation }}</span>
                 </div>
@@ -145,44 +145,45 @@
 
         </div>
         <div class="col-md-5 dark-color intereses-investimentos">
-            <h3>Solicitações de investimentos</h3>
+            <h3>Investment requests</h3>
             <hr>
             <br>
 
+            {% for ip in investment_proposal_sent %}
             <div class="bg-color-dark card-investimento">
                 <div class="row">
-                    <div class="col-md">
-                        <img src="{% static 'geral/img/foto_perfil.webp' %}" class="foto-perfil" alt="">
-                    </div>
-                    <div class="col-md-5" style="text-align: left">
-                        <span class="sub-fonte">Caio</span>
-                        <br>
-                        <span class="sub-fonte2">R$ 9000</span>
-                        <br>
-                        <span class="sub-fonte2">1%
+                    <div class="col-md" style="display: flex;justify-content: space-between;">
+                        <div style="text-align: left;">
 
+                            <span class="sub-fonte">{{ip.investor.username}}</span>
+                            <br>
+                            <span class="sub-fonte2">R$ {{ip.value}}</span>
+                            <br>
+                            <span class="sub-fonte2">{{ip.percentual}}%</span>
 
+                            {% if ip.get_valuation >= company.get_valuation %}
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                 class="bi bi-caret-up-fill" style="color: #00ff00;" viewBox="0 0 16 16">
                                 <path
                                     d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
                             </svg>
-
-                            <!---    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="color: #ff0000;" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
-                                            <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
-                                        </svg>
-                                    -->
-
-                        </span>
+                            {% else %}
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" style="color: #ff0000;" class="bi bi-caret-down-fill" viewBox="0 0 16 16">
+                                <path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+                            </svg>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="col-md">
-                        <a href="#" class="btn btn-indigo-normal">Aceitar</a>
+
+                    <div class="col-md-2" style="margin: 0;">
+                        <a href="{% url 'manage_proposal' ip.id %}?acao=yes" class="btn btn-indigo-normal">Yes</a>
                         <br>
-                        <a href="#" style="margin-top: 5px;" class="btn btn-danger">Negar</a>
+                        <a href="{% url 'manage_proposal' ip.id %}?acao=no" style="margin-top: 5px;" class="btn btn-danger">No</a>
                     </div>
                 </div>
             </div>
             <br>
+            {% endfor %}
 
         </div>
     </div>
