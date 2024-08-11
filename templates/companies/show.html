@@ -24,10 +24,10 @@ Companies
                 {% csrf_token %}
                 <label style="margin-bottom: 8px;"><strong>Company</strong></label>
                 <input type="text" name="company" class="form-control" placeholder="Seach for a company">
-            </div>
-            <div class="col-md">
-                <br>
-                <input type="submit" value="Filter" class="btn btn-outline-primary" style="margin-top: 8px;">
+        </div>
+        <div class="col-md">
+            <br>
+            <input type="submit" value="Filter" class="btn btn-outline-primary" style="margin-top: 8px;">
             </form>
         </div>
     </div>
@@ -48,17 +48,17 @@ Companies
 
             {% for company in companies %}
             <tr class="linha">
-                <td class="linha">{{ company.name }}</td>
+                <td class="linha">{{ company.company.name }}</td>
                 <td class="linha">
                     <div class="progress">
-                        <div class="progress-bar bg-success" role="progressbar"
-                            style="width: 25%" aria-valuenow="25" aria-valuemin="0"
-                            aria-valuemax="100"></div>
-                            <!-- TODO: depende dos investidores -->
+                        <div class="progress-bar bg-success" role="progressbar" style="width: {{company.percentual}}%" aria-valuenow="25"
+                            aria-valuemin="0" aria-valuemax="100"></div>
                     </div>
                 </td>
-                <td class="linha">{{ company.get_status }}</td>
-                <td class="linha"><a href="{% if request.user != company.user %}{% url 'seeCompanyInvestors' company.slug %}{% else %}{% url 'seeCompany' company.slug %}{% endif %}" class="btn btn-indigo-normal">Abrir</a></td>
+                <td class="linha">{{ company.company.get_status }}</td>
+                <td class="linha"><a
+                        href="{% if request.user != company.company.user %}{% url 'seeCompanyInvestors' company.company.slug %}{% else %}{% url 'seeCompany' company.company.slug %}{% endif %}"
+                        class="btn btn-indigo-normal">Abrir</a></td>
             </tr>
             {% endfor %}
         </tbody>

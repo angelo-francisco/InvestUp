@@ -43,7 +43,7 @@
             </ol>
 
         </div>
-        <form action="{% url 'sign_contract' investment_proposal.id %}" enctype='multipart/form-data' method="POST" style="margin-top: 20px;"> {% csrf_token %}
+        <form action="{% url 'sign_contract' investment_proposal.proposal_token %}" enctype='multipart/form-data' method="POST" style="margin-top: 20px;"> {% csrf_token %}
             <input type="file" name="selfie" class="form-control" style="width: 40%">
             <br>
             <input type="file" name="rg" class="form-control" style="width: 40%">

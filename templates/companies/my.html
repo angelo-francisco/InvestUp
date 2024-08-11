@@ -1,0 +1,71 @@
+{% extends 'bases/base.html' %}
+{% load static %}
+
+{% block title %}
+    My companies
+{% endblock %}
+
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/company/show.css' %}">
+<link rel="stylesheet" href="{% static 'css/users/users.css' %}">
+{% endblock %}
+
+
+{% block content %}
+    {% include 'partials/nav.html' %}
+    <br><br>
+<div class="container">
+    <div class="row">
+        {% include "partials/messages.html" %}
+        {% if search %}
+        <div class="col-md-4">
+            <form action="{% url 'showCompany' %}" method="POST">
+                {% csrf_token %}
+                <label style="margin-bottom: 8px;"><strong>Company</strong></label>
+                <input type="text" name="company" class="form-control" placeholder="Seach for a company">
+        </div>
+        <div class="col-md">
+            <br>
+            <input type="submit" value="Filter" class="btn btn-outline-primary" style="margin-top: 8px;">
+            </form>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+<br>
+<div class="container dark-color container_company">
+    {% if search %}
+    <table class="table">
+        <thead>
+            <tr class="cabecalho" style="background-color: transparent !important;">
+                <th class="cabecalho" scope="col">Name</th>
+                <th class="cabecalho" scope="col">Internship</th>
+                <th class="cabecalho" scope="col">Status</th>
+                <th class="cabecalho" scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            
+            {% for company in companies %}
+            <tr class="linha">
+                <td class="linha">{{ company.name }}</td>
+                <td class="linha">{{ company.internship }}</td>
+                <td class="linha">{{ company.get_status }}</td>
+                <td class="linha"><a
+                    href="{% if request.user != company.user %}{% url 'seeCompanyInvestors' company.slug %}{% else %}{% url 'seeCompany' company.slug %}{% endif %}"
+                    class="btn btn-indigo-normal">Abrir</a></td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                <strong><p style="text-align: center;">You have no companies!</p></strong>
+                {% endif %}
+            </tbody>
+        </table>
+        
+    </div>
+    {% endblock %}
+    
+    

@@ -130,3 +130,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Login
 LOGIN_URL = "/auth/login/"
+
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

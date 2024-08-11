@@ -1,15 +1,15 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from companies.modelChoices import area_choices
-from companies.models import Company, AttachDocument, Metrics
+from companies.models import Company, AttachDocument, Metrics, Notifications
 from django.contrib.auth.decorators import login_required
 from .models import InvestmentProposal
 from django.contrib import messages
 
 
 @login_required
-def sign_contract(request, id):
-    investment_proposal = get_object_or_404(InvestmentProposal, id=id)
+def sign_contract(request, token):
+    investment_proposal = get_object_or_404(InvestmentProposal, proposal_token=token)
     context = {"investment_proposal": investment_proposal}
     if investment_proposal.status not in "AS":
         messages.warning(request, "this proposal isn't waiting for sign")
@@ -28,7 +28,15 @@ def sign_contract(request, id):
         investment_proposal.status = "PE"
 
         investment_proposal.save()
-        messages.success(request, "Proposl added successfully")
+
+        notf = Notifications.objects.create(
+            user=request.user,
+            company=investment_proposal.company,
+            title=f'New proposal done to {str(investment_proposal.company.name)}'
+        )
+        notf.save()
+        
+        messages.success(request, "Proposal added successfully")
         return redirect(
             reverse(
                 "seeCompanyInvestors", kwargs={"slug": investment_proposal.company.slug}
@@ -71,7 +79,9 @@ def newProposalInvestors(request, slug):
     )
 
     investment_proposal.save()
-    return redirect(reverse("sign_contract", kwargs={"id": investment_proposal.id}))
+    return redirect(
+        reverse("sign_contract", kwargs={"token": investment_proposal.proposal_token})
+    )
 
 
 @login_required
@@ -79,7 +89,11 @@ def seeCompanyInvestors(request, slug):
     company = get_object_or_404(Company, slug=slug)
     documents = AttachDocument.objects.filter(company=company)
     metrics = Metrics.objects.filter(company=company)
-    percentual = sum(InvestmentProposal.objects.filter(company=company).filter(status='PA').values_list('percentual', flat=True))
+    percentual = sum(
+        InvestmentProposal.objects.filter(company=company)
+        .filter(status="PA")
+        .values_list("percentual", flat=True)
+    )
     up_80 = False
     limiar = (company.percentual_equity * 80) / 100
     disp_percentual = company.percentual_equity - percentual
@@ -88,12 +102,12 @@ def seeCompanyInvestors(request, slug):
         up_80 = True
 
     context = {
-        "company": company, 
-        "docs": documents, 
+        "company": company,
+        "docs": documents,
         "metrics": metrics,
         "percentual": int(percentual),
-        'up_80': up_80,
-        'disp_percentual': disp_percentual
+        "up_80": up_80,
+        "disp_percentual": disp_percentual,
     }
     return render(request, "investors/see.html", context=context)
 
@@ -117,17 +131,14 @@ def sugest(request):
             ).exclude(internship="E")
 
         companies = companies.filter(area__in=area)
-        search = True
-        # # TODO: use advanced Django ORM functions, like annotate with ExpressionWrapper(), and F()
-        companies_list = []
-        for company in companies:
-            percentual = (float(value) * 100) / float(company.get_valuation)
 
-            if percentual >= 1:
-                companies_list.append(company)
+        companies_list = [
+            company
+            for company in companies
+            if (float(value) * 100) / float(company.get_valuation) >= 1
+        ]
 
-        if len(companies_list) == 0:
-            search = False
+        search = bool(companies_list)
 
         context["companies"] = companies_list
         context["search"] = search

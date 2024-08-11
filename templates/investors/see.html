@@ -47,7 +47,7 @@
                 
                 
                 <hr>
-                <p>{{empresa.descricao}}</p>
+                <p>{{company.description}}</p>
                 <div class="col-md">
                     <h5>Expected Valuation</h5>
                     <span class="sub-fonte">Expected: {{company.get_valuation}}</span>
@@ -77,6 +77,8 @@
                 </div>
 
                 <hr>
+                {% if request.user != company.user %}
+                {% if company.get_status == '<span class="badge bg-success">Capting</span>' %}
                 <div class="row">
                     <h4>Make your proposal</h4>
                     <br><br>
@@ -93,6 +95,8 @@
                     </div>
                     
                 </div>
+                {% endif %}
+                {% endif %}
             </div>
             <div class="col-md-5 intereses-investimentos">
                 <video name='demo' controls autoplay width='100%'>

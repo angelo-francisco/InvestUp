@@ -79,3 +79,10 @@ class Metrics(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+class Notifications(models.Model):
+    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    company = models.ForeignKey(Company, on_delete=models.DO_NOTHING)
+    title = models.CharField(max_length=50)
+    date = models.DateTimeField(auto_now_add=True)
