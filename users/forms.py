@@ -33,10 +33,12 @@ class SignupForm(StyleForm, UserCreationForm):
 
     def clean_username(self):
         username = self.cleaned_data.get("username")
-        user_with_same_username = User.objects.filter(username=username).exists()
+        user_with_same_username = User.objects.filter(username__iexact=username).exists()
 
         if user_with_same_username:
             raise forms.ValidationError("This username already exists")
+        
+        return username
 
     def clean_email(self):
         email = self.cleaned_data.get("email")
@@ -45,6 +47,8 @@ class SignupForm(StyleForm, UserCreationForm):
         if user_with_same_email:
             raise forms.ValidationError("This email already exists")
 
+        return email
+    
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):

@@ -15,7 +15,7 @@
 
 {% block content %}
 
-<div class="container-fluid" style="height: 100vh;display: flex;justify-content: center;align-items: center;">
+<div class="container-fluid" style="height: 100vh;display: flex;justify-content: center;align-items: center;scale: 0.9;">
     <div class="col-md-10 d-flex justify-content-center bg-color-dark" style="background-color: transparent !important;flex-direction: column;width: 25em;">
         <h1 class="text-logo">InvestUp</h1>
         <h1>SignUp</h1>
@@ -25,13 +25,27 @@
             {% csrf_token %}
 
             {% include "partials/form_error.html" %}
-                
-            {% for field in form %}
                 <div>
-                    <label>{{ field.label }}</label>
-                    {{ field }}
+                    <label>{{ form.username.label }}</label>
+                    {{ form.username }}
+                    <small>{{form.username.help_text}}</small>
                 </div>
-            {% endfor %}
+                <div>
+                    <label>{{ form.email.label }}</label>
+                    {{ form.email }}
+                </div>
+                <div>
+                    <label>{{ form.password1.label }}</label>
+                    {{ form.password1}}
+                    <small>{{form.password1.help_text}}</small>
+
+                </div>
+                <div>
+                    <label>{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                    <small>{{form.password2.help_text}}</small>
+
+                </div>
                 
             <div class="centralizar">
                 <a href="{% url 'login' %}" class="texto">Do you have an account?</a>

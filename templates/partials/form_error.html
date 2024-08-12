@@ -1,9 +1,9 @@
 {% if form.errors %}
     <div class="alert alert-danger">
     <i class="bi bi-exclamation-triangle"></i>
-        {% for _, errors in form.errors.items %}
+        {% for fieldname, errors in form.errors.items %}
             {% for error in errors %}
-                {{ error }}
+               {{ fieldname }}: {{ error }}
             {% endfor %}
         {% endfor %}
     </div>    

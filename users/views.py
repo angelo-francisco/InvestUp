@@ -81,6 +81,14 @@ def profile(request, username):
     num_prop = InvestmentProposal.objects.filter(investor=user).count()
     notfs = reversed(Notifications.objects.filter(user=user))
     form = forms.ProfileForm(instance=user)
+
+    if request.method == "POST":
+        form = forms.ProfileForm(request.POST, instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect(reverse('profile', args=[username]))
+        
     return render(
         request,
         "registration/profile.html",
@@ -102,25 +110,21 @@ def _signup(request):
         return redirect(reverse("showCompany"))
 
     form = forms.SignupForm()
-
     if request.method == "POST":
         form = forms.SignupForm(request.POST)
-
         if form.is_valid():
             form.save()
-
-            messages.success(request, "Signup done successfully")
+            messages.success(request, "Signup done successfully. You can now log in.")
             return redirect(reverse("login"))
 
     context = {"form": form}
     return render(request, "registration/signup.html", context=context)
 
 
+
 def _login(request):
     if request.user.is_authenticated:
         return redirect(reverse("showCompany"))
-
-    form = forms.LoginForm()
 
     if request.method == "POST":
         form = forms.LoginForm(request, data=request.POST)
@@ -131,6 +135,8 @@ def _login(request):
 
             messages.success(request, "Login done successfully")
             return redirect(reverse("showCompany"))
+
+    form = forms.LoginForm()
 
     context = {"form": form}
     return render(request, "registration/login.html", context=context)
